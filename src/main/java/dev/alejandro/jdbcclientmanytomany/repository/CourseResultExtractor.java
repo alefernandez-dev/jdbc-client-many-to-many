@@ -6,15 +6,13 @@ import org.springframework.jdbc.core.ResultSetExtractor;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class CourseResultExtractor implements ResultSetExtractor<List<CourseDatabase>> {
 
     @Override
     public List<CourseDatabase> extractData(ResultSet rs) throws SQLException, DataAccessException {
-        Map<Long, CourseDatabase> courseMap = new HashMap<>();
+        List<CourseDatabase> courseDatabaseList = new ArrayList<>();
         CourseDatabase courseDatabase = null;
         while (rs.next()) {
             long courseId = rs.getLong("course_id");
@@ -27,7 +25,7 @@ public class CourseResultExtractor implements ResultSetExtractor<List<CourseData
                 courseDatabase.id = courseId;
                 courseDatabase.name = courseName;
                 courseDatabase.students = new ArrayList<>();
-                courseMap.put(courseId, courseDatabase);
+                courseDatabaseList.add(courseDatabase);
             }
 
             StudentDatabase studentDatabase = new StudentDatabase();
@@ -36,6 +34,6 @@ public class CourseResultExtractor implements ResultSetExtractor<List<CourseData
             courseDatabase.students.add(studentDatabase);
         }
 
-        return new ArrayList<>(courseMap.values());
+        return courseDatabaseList;
     }
 }
